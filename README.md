@@ -26,9 +26,16 @@
     +-------------------------+
     1 row in set (0.00 sec)
     ```
+- 切換事務的隔離level    
+    - https://stackoverflow.com/questions/7937472/how-to-set-transaction-isolation-level-mysql
+    - https://dev.mysql.com/doc/refman/8.0/en/set-transaction.html
+    ```mysql
+    SET SESSION TRANSACTION ISOLATION LEVEL READ UNCOMMITTED
+    ```
 # 不考慮事務隔離性(Isolation) 引發的問題
     事务的4种隔离级别（Isolation Level）分别是什么？
     https://blog.51cto.com/lhrbest/2705377
 - 髒讀
+    - A 事務讀取到B事務尚未提交更改的數據
 - 不可重複讀
 - 幻讀
