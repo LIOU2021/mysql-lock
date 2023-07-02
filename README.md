@@ -11,18 +11,18 @@
 # 事務（Transaction） 
 是指一系列數據庫操作（例如插入、更新、刪除），它們作為一個單獨的工作單元一起執行，要麼全部執行成功，要麼全部失敗回滾。事務通常用於確保數據的完整性和一致性，並且提供了ACID（原子性、一致性、隔離性、持久性）特性。
 - [四種事務等級](https://dev.mysql.com/doc/refman/8.0/en/innodb-transaction-isolation-levels.html)
-    - READ UNCOMMITTED
+    1. READ UNCOMMITTED
         - 其他事務未提交的數據，也會被當前事務讀取到
         - 會發生髒讀，數據可能隨時會被修改、commit、rollback，是不可靠的
-    - READ COMMITTED
+    2. READ COMMITTED
         - 只讀取到提交後的變動
         - 因為沒使用快照，所以會發生不可重複讀。當其他事務提交後，當前事務不同時間點的同一查詢語句將會有不同的結果
-    - REPEATABLE READ
+    3. REPEATABLE READ
         - InnoDB默認
         - 避免了髒讀、不可重複讀，但有幻讀問題
         - 只讀取到commit後的訊息，所以避免了髒讀
         - 使用了快照(snapshot)，避免了不可重複讀        
-    - SERIALIZABLE
+    4. SERIALIZABLE
         - 隔離最高層級，可以避免幻讀
         - 其他事務的update、insert、delete語句將會被堵塞
 - 查看當前事務預設等級
@@ -45,6 +45,8 @@
     事务的4种隔离级别（Isolation Level）分别是什么？
     https://blog.51cto.com/lhrbest/2705377
 - 髒讀
-    - A 事務讀取到B事務尚未提交更改的數據
+    - A 事務讀取到B事務`尚未提交`更改的數據
 - 不可重複讀
+    - 在同一事務中，不同時間點的查詢where，會受其他事務`提交後`的`update`值
 - 幻讀
+    - 在當前事務上未提交前，多次進行select區間的query，看到了其他事務`提交後`的`insert`資料
