@@ -12,7 +12,7 @@
 是指一系列數據庫操作（例如插入、更新、刪除），它們作為一個單獨的工作單元一起執行，要麼全部執行成功，要麼全部失敗回滾。事務通常用於確保數據的完整性和一致性，並且提供了ACID（原子性、一致性、隔離性、持久性）特性。
 - [四種事務等級](https://dev.mysql.com/doc/refman/8.0/en/innodb-transaction-isolation-levels.html)
     - REPEATABLE READ
-        - mysql預設
+        - InnoDB默認
     - READ COMMITTED
     - READ UNCOMMITTED
     - SERIALIZABLE
