@@ -23,6 +23,8 @@
         - 只讀取到commit後的訊息，所以避免了髒讀
         - 使用了快照(snapshot)，避免了不可重複讀        
     - SERIALIZABLE
+        - 隔離最高層級，可以避免幻讀
+        - 其他事務的update、insert、delete語句將會被堵塞
 - 查看當前事務預設等級
     ```mysql
     mysql> SELECT @@transaction_isolation;
