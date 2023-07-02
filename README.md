@@ -16,6 +16,16 @@
     - READ COMMITTED
     - READ UNCOMMITTED
     - SERIALIZABLE
+- 查看當前事務預設等級
+    ```mysql
+    mysql> SELECT @@transaction_isolation;
+    +-------------------------+
+    | @@transaction_isolation |
+    +-------------------------+
+    | REPEATABLE-READ         |
+    +-------------------------+
+    1 row in set (0.00 sec)
+    ```
 # 不考慮事務隔離性(Isolation) 引發的問題
     事务的4种隔离级别（Isolation Level）分别是什么？
     https://blog.51cto.com/lhrbest/2705377
