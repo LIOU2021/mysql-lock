@@ -50,11 +50,26 @@
     - 在當前事務上未提交前，多次進行select區間的query，看到了其他事務`提交後`的`insert`資料
 
 # row lock 升級成 table lock的問題
-- 參考
-- https://www.cnblogs.com/itdragon/p/8194622.html
+- 參考一: https://www.cnblogs.com/itdragon/p/8194622.html
     1. InnoDB 支持表锁和行锁，使用索引作为检索条件修改数据时采用行锁，否则采用表锁。
     2. InnoDB 自动给修改操作加锁，给查询操作不自动加锁
-    3. 行锁可能因为未使用索引而升级为表锁，所以除了检查索引是否创建的同时，也需要通过explain执行计划查询索引是否被实际使用。
+    3. 行锁可能因为未使用索引而升级为表锁，所以除了检查索引是否创建的同时，也需要通过explain    行计划查询索引是否被实际使用。
     4. 行锁相对于表锁来说，优势在于高并发场景下表现更突出，毕竟锁的粒度小。
     5. 当表的大部分数据需要被修改，或者是多表复杂关联查询时，建议使用表锁优于行锁。
-    6. 为了保证数据的一致完整性，任何一个数据库都存在锁定机制。锁定机制的优劣直接影响到一个数据库的并发处理能力和性能。    
+    6. 为了保证数据的一致完整性，任何一个数据库都存在锁定机制。锁定机制的优劣直接影响到一个数   库的并发处理能力和性能。    
+    7. 未使用索引時，將會lock table
+    8. 当我们用范围条件检索数据，并请求共享或排他锁时，InnoDB会给符合条件的已有数据记录的索引项加锁；对于键值在条件范围内但并不存在的记录，叫做"间隙(GAP)"。InnoDB也会对这个"间隙"加锁，这种锁机制就是所谓的间隙锁(Next-Key锁)。
+        ```mysql
+        Transaction-A
+        mysql> update innodb_lock set k=66 where id >=6;
+        Query OK, 1 row affected (0.63 sec)
+        mysql> commit;
+
+        Transaction-B
+        mysql> insert into innodb_lock (id,k,v) values(7,'7','7000');
+        Query OK, 1 row affected (18.99 sec)
+        ```
+- 參考二: https://blog.51cto.com/imysql/3235169
+    1. mysql官方說當你where範圍涉及table 50%時，就可能lock table，但網友實測20%就觸發了
+    2. 從explain出來，即便key顯示primary也不一定表示lock table，主要看where範圍決定
+    3. 即便使用二級索引，當lock範圍過大時，row lock也會升級成table lock
